@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nJw-jS-TsC">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Get StartVC-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="GetStartVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="GetStartVC" customModule="FaceNoseLipsDetectionDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiw-qM-i1B">
+                                <rect key="frame" x="39.333333333333343" y="441" width="314.33333333333326" height="39"/>
+                                <color key="backgroundColor" systemColor="tintColor"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Upload Photo">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnContinueTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="f3W-ea-LO2"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fiw-qM-i1B" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.8" id="BzV-5k-CD8"/>
+                            <constraint firstItem="fiw-qM-i1B" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Xlp-k4-IFE"/>
+                            <constraint firstItem="fiw-qM-i1B" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="yiC-Gj-lpz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="fSX-dP-l3E"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1037.4045801526718" y="-34.507042253521128"/>
+        </scene>
+        <!--Image EditVC-->
+        <scene sceneID="NR0-jv-WPv">
+            <objects>
+                <viewController storyboardIdentifier="ImageEditVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zkO-TV-44Q" customClass="ImageEditVC" customModule="FaceNoseLipsDetectionDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MKG-0H-DeD">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.90000000000000002" maxValue="1.1000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="e15-DY-5H5">
+                                <rect key="frame" x="38" y="758" width="317" height="31"/>
+                                <connections>
+                                    <action selector="sliderChanged:" destination="zkO-TV-44Q" eventType="valueChanged" id="Yx1-cQ-K3y"/>
+                                </connections>
+                            </slider>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DbH-G2-22V">
+                                <rect key="frame" x="20" y="69" width="353" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="FdG-pg-1zu"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Nose"/>
+                                    <segment title="Lips"/>
+                                    <segment title="Eyes"/>
+                                    <segment title="EyesBrow"/>
+                                    <segment title="Face"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" systemColor="systemBrownColor"/>
+                            </segmentedControl>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SMZ-eh-BON">
+                                <rect key="frame" x="10" y="129" width="373" height="629"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="cer-gZ-lO7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="DbH-G2-22V" firstAttribute="top" secondItem="cer-gZ-lO7" secondAttribute="top" constant="10" id="07W-1M-dPl"/>
+                            <constraint firstItem="SMZ-eh-BON" firstAttribute="leading" secondItem="cer-gZ-lO7" secondAttribute="leading" constant="10" id="6ZF-sh-02y"/>
+                            <constraint firstItem="cer-gZ-lO7" firstAttribute="trailing" secondItem="e15-DY-5H5" secondAttribute="trailing" constant="40" id="Fla-s2-jpO"/>
+                            <constraint firstItem="SMZ-eh-BON" firstAttribute="centerX" secondItem="cer-gZ-lO7" secondAttribute="centerX" id="MA8-mi-VSv"/>
+                            <constraint firstItem="DbH-G2-22V" firstAttribute="leading" secondItem="cer-gZ-lO7" secondAttribute="leading" constant="20" id="VpK-ar-Jte"/>
+                            <constraint firstItem="e15-DY-5H5" firstAttribute="top" secondItem="SMZ-eh-BON" secondAttribute="bottom" id="c7u-re-YNN"/>
+                            <constraint firstItem="SMZ-eh-BON" firstAttribute="top" secondItem="DbH-G2-22V" secondAttribute="bottom" constant="10" id="cPk-yO-4eg"/>
+                            <constraint firstItem="cer-gZ-lO7" firstAttribute="trailing" secondItem="SMZ-eh-BON" secondAttribute="trailing" constant="10" id="lMc-vC-dP5"/>
+                            <constraint firstItem="cer-gZ-lO7" firstAttribute="bottom" secondItem="e15-DY-5H5" secondAttribute="bottom" constant="30" id="nrc-Z4-dkn"/>
+                            <constraint firstItem="cer-gZ-lO7" firstAttribute="trailing" secondItem="DbH-G2-22V" secondAttribute="trailing" constant="20" id="pAQ-CA-2ub"/>
+                            <constraint firstItem="e15-DY-5H5" firstAttribute="centerX" secondItem="cer-gZ-lO7" secondAttribute="centerX" id="xdI-qL-Ml9"/>
+                            <constraint firstItem="e15-DY-5H5" firstAttribute="leading" secondItem="cer-gZ-lO7" secondAttribute="leading" constant="40" id="yRz-Ao-Ul8"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="metalImageView" destination="SMZ-eh-BON" id="uTn-My-pGm"/>
+                        <outlet property="slider" destination="e15-DY-5H5" id="mDa-Ea-RRZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9b1-KJ-wSL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1725.9541984732823" y="-34.507042253521128"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="TYg-wM-PHb">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nJw-jS-TsC" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Rtr-NZ-bmw">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="cRN-Ou-wA5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DZW-Kh-0wH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="110.68702290076335" y="-34.507042253521128"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBrownColor">
+            <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
