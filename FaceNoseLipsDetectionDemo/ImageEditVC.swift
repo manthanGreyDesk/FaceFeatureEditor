@@ -139,16 +139,27 @@ class MetalImageView: MTKView {
     }
 
     func updateImage(_ image: UIImage) {
-        guard let device = self.device,
-              let cgImage = image.cgImage else { return }
+        guard let device = self.device, device != nil else {
+              print("❌ Metal device is not available")
+              return
+          }
+          guard let library = device.makeDefaultLibrary(),
+                let vertexFunction = library.makeFunction(name: "vertexShader"),
+                let fragmentFunction = library.makeFunction(name: "fragmentShader") else {
+              print("❌ Failed to load shaders")
+              return
+          }
 
-        let textureLoader = MTKTextureLoader(device: device)
-        do {
-            texture = try textureLoader.newTexture(cgImage: cgImage, options: nil)
-            self.setNeedsDisplay()
-        } catch {
-            print("Failed to load texture: \(error)")
-        }
+          let pipelineDescriptor = MTLRenderPipelineDescriptor()
+          pipelineDescriptor.vertexFunction = vertexFunction
+          pipelineDescriptor.fragmentFunction = fragmentFunction
+          pipelineDescriptor.colorAttachments[0].pixelFormat = self.colorPixelFormat
+
+          do {
+              pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+          } catch {
+              print("❌ Failed to create pipeline state: \(error)")
+          }
     }
 
     override func draw(_ rect: CGRect) {
