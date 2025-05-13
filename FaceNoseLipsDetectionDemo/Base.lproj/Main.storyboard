@@ -54,7 +54,7 @@
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.90000000000000002" maxValue="1.1000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="e15-DY-5H5">
                                 <rect key="frame" x="38" y="758" width="317" height="31"/>
                                 <connections>
-                                    <action selector="sliderChanged:" destination="zkO-TV-44Q" eventType="valueChanged" id="Yx1-cQ-K3y"/>
+                                    <action selector="SliderChange:" destination="zkO-TV-44Q" eventType="valueChanged" id="JkD-Pf-9qq"/>
                                 </connections>
                             </slider>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DbH-G2-22V">
@@ -70,6 +70,9 @@
                                     <segment title="Face"/>
                                 </segments>
                                 <color key="selectedSegmentTintColor" systemColor="systemBrownColor"/>
+                                <connections>
+                                    <action selector="ChangeSegment:" destination="zkO-TV-44Q" eventType="valueChanged" id="lOQ-hr-wFC"/>
+                                </connections>
                             </segmentedControl>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SMZ-eh-BON">
                                 <rect key="frame" x="10" y="129" width="373" height="629"/>
@@ -93,7 +96,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="metalImageView" destination="SMZ-eh-BON" id="uTn-My-pGm"/>
+                        <outlet property="Segment" destination="DbH-G2-22V" id="ajj-90-QdB"/>
+                        <outlet property="imageView" destination="SMZ-eh-BON" id="KBD-Py-ZhM"/>
                         <outlet property="slider" destination="e15-DY-5H5" id="mDa-Ea-RRZ"/>
                     </connections>
                 </viewController>

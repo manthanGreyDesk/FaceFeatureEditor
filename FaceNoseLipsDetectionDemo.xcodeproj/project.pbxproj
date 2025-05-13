@@ -14,7 +14,6 @@
 		8275DA3D2DD1EB050003C095 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8275DA352DD1EB050003C095 /* SceneDelegate.swift */; };
 		8275DA3E2DD1EB050003C095 /* GetStartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8275DA362DD1EB050003C095 /* GetStartVC.swift */; };
 		8275DA402DD205730003C095 /* ImageEditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8275DA3F2DD205730003C095 /* ImageEditVC.swift */; };
-		82D730332DD326A800451D7C /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 82D730322DD326A800451D7C /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		8275DA352DD1EB050003C095 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		8275DA362DD1EB050003C095 /* GetStartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStartVC.swift; sourceTree = "<group>"; };
 		8275DA3F2DD205730003C095 /* ImageEditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditVC.swift; sourceTree = "<group>"; };
-		82D730322DD326A800451D7C /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +64,6 @@
 				8275DA322DD1EB050003C095 /* LaunchScreen.storyboard */,
 				8275DA342DD1EB050003C095 /* Main.storyboard */,
 				8275DA3F2DD205730003C095 /* ImageEditVC.swift */,
-				82D730322DD326A800451D7C /* Shaders.metal */,
 				8275DA352DD1EB050003C095 /* SceneDelegate.swift */,
 				8275DA362DD1EB050003C095 /* GetStartVC.swift */,
 			);
@@ -148,7 +145,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8275DA3C2DD1EB050003C095 /* AppDelegate.swift in Sources */,
-				82D730332DD326A800451D7C /* Shaders.metal in Sources */,
 				8275DA3D2DD1EB050003C095 /* SceneDelegate.swift in Sources */,
 				8275DA402DD205730003C095 /* ImageEditVC.swift in Sources */,
 				8275DA3E2DD1EB050003C095 /* GetStartVC.swift in Sources */,

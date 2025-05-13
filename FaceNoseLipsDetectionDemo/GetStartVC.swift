@@ -47,7 +47,7 @@ extension GetStartVC : PHPickerViewControllerDelegate{
                             DispatchQueue.main.async {
                                 
                                 let nextVC = self.storyboard!.instantiateViewController(withIdentifier: "ImageEditVC") as! ImageEditVC
-                     //           nextVC.image = selectedImage
+                                nextVC.image = selectedImage
                                 self.navigationController?.pushViewController(nextVC, animated: true)
                             }
                         }

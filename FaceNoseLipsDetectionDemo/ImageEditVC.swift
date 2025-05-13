@@ -13,65 +13,124 @@
 
 import UIKit
 import Vision
-import MetalKit
 
 class ImageEditVC: UIViewController {
 
+    @IBOutlet weak var Segment: UISegmentedControl!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var metalImageView: MetalImageView!
 
-    var image = UIImage(named: "face")!
-    var selectedFeaturePoints: [CGPoint] = []
+    var image = UIImage()
     var faceObservation: VNFaceObservation?
+
+    var nosePoints: [CGPoint] = []
+    var lipsPoints: [CGPoint] = []
+    var leftEyePoints: [CGPoint] = []
+    var rightEyePoints: [CGPoint] = []
+    var leftEyeBrowsPoints: [CGPoint] = []
+    var rightEyeBrowsPoints: [CGPoint] = []
+    var facePoints: [CGPoint] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        metalImageView.setupMetal()
-        metalImageView.updateImage(image)
+        imageView.image = image
         detectFaceFeatures(in: image)
-        slider.minimumValue = 0.9
-        slider.maximumValue = 1.1
-    }
-
-    @IBAction func sliderChanged(_ sender: UISlider) {
-        let scale = CGFloat(sender.value)
-        guard let scaled = applyFeatureScaling(original: image, featurePoints: selectedFeaturePoints, scale: scale) else { return }
-        metalImageView.updateImage(scaled)
+        slider.minimumValue = 0.94
+        slider.maximumValue = 1.06
     }
 
     func detectFaceFeatures(in image: UIImage) {
         guard let cgImage = image.cgImage else { return }
 
-        let request = VNDetectFaceLandmarksRequest { [weak self] request, _ in
+        let request = VNDetectFaceLandmarksRequest { [weak self] request, error in
             guard let self = self,
-                  let result = request.results?.first as? VNFaceObservation,
-                  let nose = result.landmarks?.nose?.normalizedPoints else { return }
+                  let results = request.results as? [VNFaceObservation],
+                  let face = results.first else { return }
 
-            self.faceObservation = result
-            let boundingBox = result.boundingBox
-            let imgSize = image.size
-            self.selectedFeaturePoints = nose.map {
-                let x = boundingBox.origin.x + $0.x * boundingBox.width
-                let y = 1 - (boundingBox.origin.y + $0.y * boundingBox.height)
-                return CGPoint(x: x * imgSize.width, y: y * imgSize.height)
+            self.faceObservation = face
+            let boundingBox = face.boundingBox
+            let size = image.size
+
+            func convert(_ points: [CGPoint]?, to array: inout [CGPoint]) {
+                guard let points = points else { return }
+                array = points.map { self.convert(point: $0, boundingBox: boundingBox, imageSize: size) }
             }
+
+            convert(face.landmarks?.nose?.normalizedPoints, to: &nosePoints)
+            convert(face.landmarks?.outerLips?.normalizedPoints, to: &lipsPoints)
+            convert(face.landmarks?.leftEye?.normalizedPoints, to: &leftEyePoints)
+            convert(face.landmarks?.rightEye?.normalizedPoints, to: &rightEyePoints)
+            convert(face.landmarks?.leftEyebrow?.normalizedPoints, to: &leftEyeBrowsPoints)
+            convert(face.landmarks?.rightEyebrow?.normalizedPoints, to: &rightEyeBrowsPoints)
+            convert(face.landmarks?.faceContour?.normalizedPoints, to: &facePoints)
         }
 
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         try? handler.perform([request])
     }
 
-    func applyFeatureScaling(original: UIImage, featurePoints: [CGPoint], scale: CGFloat) -> UIImage? {
-        guard featurePoints.count > 2 else { return nil }
+    func convert(point: CGPoint, boundingBox: CGRect, imageSize: CGSize) -> CGPoint {
+        let x = boundingBox.origin.x + point.x * boundingBox.width
+        let y = 1 - (boundingBox.origin.y + point.y * boundingBox.height)
+        return CGPoint(x: x * imageSize.width, y: y * imageSize.height)
+    }
 
-        let path = UIBezierPath()
-        path.move(to: featurePoints.first!)
-        for pt in featurePoints.dropFirst() {
-            path.addLine(to: pt)
+    @IBAction func SliderChange(_ sender: UISlider) {
+        let scale = CGFloat(sender.value)
+        let selected = Segment.selectedSegmentIndex
+
+        let points: [CGPoint]
+        switch selected {
+        case 0: points = nosePoints
+        case 1: points = lipsPoints
+        case 2: points = leftEyePoints + rightEyePoints
+        case 3: points = leftEyeBrowsPoints + rightEyeBrowsPoints
+        case 4: points = facePoints
+        default: return
         }
-        path.close()
 
-        let bounds = path.bounds.insetBy(dx: -10, dy: -10)
+        guard points.count > 2 else { return }
+        imageView.image = applyFeatureScaling(original: image, featurePoints: points, scale: scale)
+    }
+
+    @IBAction func ChangeSegment(_ sender: UISegmentedControl) {
+        slider.setValue(1.0, animated: true)
+        
+        switch sender.selectedSegmentIndex{
+        case 0 : slider.minimumValue = 0.94
+            slider.maximumValue = 1.06
+            
+        case 1 : slider.minimumValue = 0.82
+            slider.maximumValue = 1.28
+            
+        case 2 : slider.minimumValue = 0.94
+            slider.maximumValue = 1.06
+            
+        case 3 : slider.minimumValue = 0.94
+            slider.maximumValue = 1.06
+            
+        case 4 : slider.minimumValue = 0.98
+            slider.maximumValue = 1.02
+            
+        default:
+            slider.minimumValue = 0.99
+            slider.maximumValue = 1.01
+        }
+
+    }
+
+    func applyFeatureScaling(original: UIImage, featurePoints: [CGPoint], scale: CGFloat) -> UIImage? {
+        // Create a smooth closed path around the feature
+        let maskPath = UIBezierPath()
+        maskPath.move(to: featurePoints.first!)
+        for point in featurePoints.dropFirst() {
+            maskPath.addLine(to: point)
+        }
+        maskPath.close()
+
+        // Feature bounding rect with padding
+        let bounds = maskPath.bounds.insetBy(dx: -15, dy: -15)
+
         UIGraphicsBeginImageContextWithOptions(original.size, false, 0)
         guard let context = UIGraphicsGetCurrentContext(),
               let croppedCG = original.cgImage?.cropping(to: bounds) else {
@@ -79,103 +138,27 @@ class ImageEditVC: UIViewController {
             return nil
         }
 
-        let cropped = UIImage(cgImage: croppedCG)
-        let newSize = CGSize(width: bounds.width * scale, height: bounds.height * scale)
-        let newOrigin = CGPoint(x: bounds.midX - newSize.width/2, y: bounds.midY - newSize.height/2)
+        let croppedImage = UIImage(cgImage: croppedCG)
+        let scaledSize = CGSize(width: bounds.width * scale, height: bounds.height * scale)
+        let scaledOrigin = CGPoint(
+            x: bounds.midX - scaledSize.width / 2,
+            y: bounds.midY - scaledSize.height / 2
+        )
 
+        // Draw the original image
         original.draw(at: .zero)
+
+        // Mask drawing area only to feature shape
         context.saveGState()
-        context.addPath(path.cgPath)
+        context.addPath(maskPath.cgPath)
         context.clip()
-        cropped.draw(in: CGRect(origin: newOrigin, size: newSize))
+
+        // Draw scaled feature
+        croppedImage.draw(in: CGRect(origin: scaledOrigin, size: scaledSize))
         context.restoreGState()
 
         let result = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return result
-    }
-}
-
-class MetalImageView: MTKView {
-
-    private var commandQueue: MTLCommandQueue!
-    private var pipelineState: MTLRenderPipelineState!
-    private var texture: MTLTexture?
-
-    func setupMetal() {
-        guard let device = MTLCreateSystemDefaultDevice() else {
-            fatalError("Metal not supported on this device")
-        }
-
-        self.device = device
-        self.commandQueue = device.makeCommandQueue()
-        self.colorPixelFormat = .bgra8Unorm
-        self.framebufferOnly = false
-        self.isPaused = true
-        self.enableSetNeedsDisplay = true
-
-        loadShaders()
-    }
-
-    private func loadShaders() {
-        guard let device = self.device,
-              let library = device.makeDefaultLibrary(),
-              let vertexFunction = library.makeFunction(name: "vertexShader"),
-              let fragmentFunction = library.makeFunction(name: "fragmentShader") else {
-            print("Failed to load Metal shaders")
-            return
-        }
-
-        let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.vertexFunction = vertexFunction
-        pipelineDescriptor.fragmentFunction = fragmentFunction
-        pipelineDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
-
-        do {
-            pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
-        } catch {
-            print("Error creating pipeline state: \(error)")
-        }
-    }
-
-    func updateImage(_ image: UIImage) {
-        guard let device = self.device, device != nil else {
-              print("❌ Metal device is not available")
-              return
-          }
-          guard let library = device.makeDefaultLibrary(),
-                let vertexFunction = library.makeFunction(name: "vertexShader"),
-                let fragmentFunction = library.makeFunction(name: "fragmentShader") else {
-              print("❌ Failed to load shaders")
-              return
-          }
-
-          let pipelineDescriptor = MTLRenderPipelineDescriptor()
-          pipelineDescriptor.vertexFunction = vertexFunction
-          pipelineDescriptor.fragmentFunction = fragmentFunction
-          pipelineDescriptor.colorAttachments[0].pixelFormat = self.colorPixelFormat
-
-          do {
-              pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
-          } catch {
-              print("❌ Failed to create pipeline state: \(error)")
-          }
-    }
-
-    override func draw(_ rect: CGRect) {
-        guard let drawable = currentDrawable,
-              let descriptor = currentRenderPassDescriptor,
-              let texture = self.texture,
-              let commandBuffer = commandQueue.makeCommandBuffer(),
-              let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
-            return
-        }
-
-        encoder.setRenderPipelineState(pipelineState)
-        encoder.setFragmentTexture(texture, index: 0)
-        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
-        encoder.endEncoding()
-        commandBuffer.present(drawable)
-        commandBuffer.commit()
     }
 }
